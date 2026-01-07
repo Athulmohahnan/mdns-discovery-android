@@ -16,5 +16,6 @@
     <!-- Card -->
     <dimen name="card_radius_16">16dp</dimen>
     <dimen name="card_elevation_6">6dp</dimen>
+    <dimen name="width_24">24dp</dimen>
 
 </resources>

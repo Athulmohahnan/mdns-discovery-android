@@ -5,7 +5,7 @@
     android:id="@+id/loginRoot"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".ui.login.LoginActivity">
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="0dp"
@@ -33,11 +33,27 @@
                 android:textSize="@dimen/text_title"
                 android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/btnLogin"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sign_in_with_google" />
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:id="@+id/btnLogin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/sign_in_with_google" />
+
+                <ProgressBar
+                    android:id="@+id/loginLoader"
+                    android:layout_width="@dimen/width_24"
+                    android:layout_height="@dimen/width_24"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="@dimen/space_md"
+                    android:indeterminate="true"
+                    android:indeterminateTint="@android:color/white"
+                    android:visibility="gone" />
+            </RelativeLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>
