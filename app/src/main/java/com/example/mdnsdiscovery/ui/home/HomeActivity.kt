@@ -1,5 +1,6 @@
 package com.example.mdnsdiscovery.ui.home
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
@@ -12,21 +13,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.mdnsdiscovery.R
 import com.example.mdnsdiscovery.data.local.db.AppDatabase
 import com.example.mdnsdiscovery.mdns.MdnsDiscoveryManager
+import com.example.mdnsdiscovery.ui.detail.DeviceDetailActivity
 import com.example.mdnsdiscovery.ui.home.adapter.DeviceAdapter
 import com.example.mdnsdiscovery.ui.home.models.DeviceUiModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var rvDevices: RecyclerView
     private lateinit var adapter: DeviceAdapter
     private lateinit var root: View
-
-
     private lateinit var db: AppDatabase
     private lateinit var mdnsManager: MdnsDiscoveryManager
-    private val deviceList = mutableListOf<DeviceUiModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,6 @@ class HomeActivity : AppCompatActivity() {
         setAdapter()
         initDatabaseAndMdns()
         loadDevicesFromDb()
-        startMdnsDiscovery()
     }
 
     private fun initDatabaseAndMdns() {
@@ -46,7 +45,12 @@ class HomeActivity : AppCompatActivity() {
     }
 
     private fun setAdapter() {
-        adapter = DeviceAdapter(emptyList())
+        adapter = DeviceAdapter { device ->
+            val intent = Intent(this, DeviceDetailActivity::class.java)
+            intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_NAME, device.name)
+            intent.putExtra(DeviceDetailActivity.EXTRA_DEVICE_IP, device.ipAddress)
+            startActivity(intent)
+        }
         rvDevices.layoutManager = LinearLayoutManager(this)
         rvDevices.adapter = adapter
     }
@@ -68,51 +72,46 @@ class HomeActivity : AppCompatActivity() {
             )
             insets
         }
-
     }
 
     private fun loadDevicesFromDb() {
         lifecycleScope.launch {
-            val devices = db.deviceDao().getAllDevices()
+            val devices = withContext(Dispatchers.IO) {
+                db.deviceDao().getAllDevices()
+            }
 
-            deviceList.clear()
-            deviceList.addAll(
-                devices.map {
+            val uiModels =  devices.map {
                     DeviceUiModel(
                         name = it.deviceName,
                         ipAddress = it.ipAddress,
-                        isOnline = it.isOnline
+                        isOnline = false
                     )
                 }
-            )
-            adapter.updateData(deviceList)
+            adapter.submitList(uiModels) {
+                startMdnsDiscovery()
+            }
         }
     }
 
     private fun startMdnsDiscovery() {
-        for (i in deviceList.indices) {
-            deviceList[i] = deviceList[i].copy(isOnline = false)
-        }
-        adapter.updateData(deviceList)
-
         lifecycleScope.launch(Dispatchers.IO) {
             db.deviceDao().markAllOffline()
         }
 
         mdnsManager.startDiscovery { entity ->
             runOnUiThread {
+                val currentList = adapter.currentList.toMutableList()
 
-                val index = deviceList.indexOfFirst {
+                val index = currentList.indexOfFirst {
                     it.ipAddress == entity.ipAddress
                 }
 
                 if (index >= 0) {
-                    // Device rediscovered → mark online
-                    deviceList[index] =
-                        deviceList[index].copy(isOnline = true)
+                    currentList[index] =
+                        currentList[index].copy(isOnline = true)
                 } else {
                     // New device discovered
-                    deviceList.add(
+                    currentList.add(
                         DeviceUiModel(
                             name = entity.deviceName,
                             ipAddress = entity.ipAddress,
@@ -121,9 +120,8 @@ class HomeActivity : AppCompatActivity() {
                     )
                 }
 
-                adapter.updateData(deviceList)
+                adapter.submitList(currentList)
             }
         }
     }
 }
-

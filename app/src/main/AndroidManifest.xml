@@ -16,6 +16,9 @@
         android:theme="@style/Theme.MdnsDiscoveryApp"
         tools:targetApi="31">
         <activity
+            android:name=".ui.detail.DeviceDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.home.HomeActivity"
             android:exported="false" />
         <activity

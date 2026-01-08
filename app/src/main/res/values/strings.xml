@@ -6,4 +6,10 @@
     <string name="discovered_devices">Discovered Devices</string>
     <string name="online">Online</string>
     <string name="offline">Offline</string>
+    <string name="ip">IP: %1$s</string>
+    <string name="location">Location: %1$s, %2$s, %3$s</string>
+    <string name="org">Org: %1$s</string>
+    <string name="failed_to_load_ip_info">Failed to load IP info</string>
+    <string name="network_information">Network Information</string>
+    <string name="device_details">Device Details</string>
 </resources>
