@@ -17,7 +17,7 @@
             android:id="@+id/tvDeviceName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Living Room TV"
+            android:text=""
             android:textSize="@dimen/text_16"
             android:textStyle="bold" />
 
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_4"
-            android:text="192.168.1.10"
+            android:text=""
             android:textColor="@android:color/darker_gray"
             android:textSize="@dimen/text_14" />
 
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_6"
-            android:text="Online"
+            android:text=""
             android:textColor="@android:color/holo_green_dark"
             android:textSize="@dimen/text_12" />
 
