@@ -3,4 +3,7 @@
     <string name="welcome">Welcome</string>
     <string name="sign_in_with_google">Sign in with Google</string>
     <string name="google_client_id">969447197612-ob2g2onfk6dgt43c2bopfq6sk7299kut.apps.googleusercontent.com</string>
+    <string name="discovered_devices">Discovered Devices</string>
+    <string name="online">Online</string>
+    <string name="offline">Offline</string>
 </resources>

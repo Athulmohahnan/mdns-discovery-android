@@ -1,6 +1,7 @@
 package com.example.mdnsdiscovery.ui.login
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -11,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.mdnsdiscovery.R
 import com.example.mdnsdiscovery.auth.GoogleAuthManager
 import com.example.mdnsdiscovery.data.local.AuthPreferences
+import com.example.mdnsdiscovery.ui.home.HomeActivity
 import com.example.mdnsdiscovery.util.NetworkUtil
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -84,7 +86,9 @@ class LoginActivity : AppCompatActivity() {
 
     private fun navigateToHome() {
         hideLoading()
-        // TODO: Implement navigation to HomeActivity
+        val intent = Intent(this, HomeActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun showLoading() {
